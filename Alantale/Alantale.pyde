@@ -56,7 +56,8 @@ def setup():
     heart = loadImage("heart.png") #Bild des Herzes
     
     
-    
+    #jdnweqnqdnweiondwendnjdowndonwnjdsajnclasnl
+    #Änderung jsjsjsjsjjsjsjsjssjjsjsjjs
 
 def draw():
     global y, x
