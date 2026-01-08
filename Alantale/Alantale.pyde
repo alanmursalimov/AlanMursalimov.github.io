@@ -1,10 +1,10 @@
-x = 600 #x Position des Herzes
-y = 525 #y Position des Herzes
+x = 600 # Startposition des Herzes
+y = 525 # Startposition des Herzes
 Keys = []
 h = 0 #Healhtbar Minderung Rechteck grösse
 
     
-w_heart = 30 
+w_heart = 45 
 h_heart = 30
 
 #Die Funktion "checkCollision", für das ganze Herz, wurde von Gemini 3 Pro geschrieben.
@@ -19,8 +19,8 @@ def checkCollision(bx, by, bw, bh):
     
     # Calculate edges of the heart
     heart_left = x
-    heart_right = x + w_heart
-    heart_top = y
+    heart_right = x + w_heart 
+    heart_top = y+5
     heart_bottom = y + h_heart
     
     # Calculate edges of the bone
@@ -36,7 +36,7 @@ def checkCollision(bx, by, bw, bh):
         heart_top < bone_bottom):
         
         # If all are true, they are touching
-        h = h + 2 # Increase damage
+        h = h + 1 # Increase damage
 
 
 
@@ -67,23 +67,41 @@ def FightInterface():
     
     
     
-    
-    
+a = 100
+b = 1075 
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
-    for a in range(450, 650, 20):
-        image(bone_vert, a, a, 20, 250)
-        checkCollision(a, a, 20, 250)
-            
-    for b in range(850, 900, 20):
-        image(bone_vert, 900, b, 20, 250) #######unfinished
-        checkCollision(900, b, 20, 250)
+    
+    global a, b
+    s = 20
+    image(bone_vert, a, 400, 20, 250)
+    image(bone_vert, b, 400, 20, 250)
+#    a = a + 2
+#    b = b - 2
+    checkCollision(a, 400, 20, 250)
+    checkCollision(b, 400, 20, 250)
+    if a >= 1075:
+        a = 2000
+    if b <= 100:
+        b = -2000
+        
+    #for i in range(300, 650, s):
+     #   image(bone_vert, i, i, 20, 250)
+      #  checkCollision(i, i, 20, 250)
+        
+ #   for y in range(650, 300, -20):
+  #      image(bone_vert, 650-y, y, 20, 250)
+    #image(loadImage("bone_wave.png"), -2500, 400)
+    #checkCollision(-2500, 400, 2991, 300)
+        
+    
+        
+    
     
     
     
 def setup():
     global ButtonFont, violett, sans, heart, bone_vert, backGround
-    background(0)
     size(1200, 850)
     violett =  color(127, 0, 255) #weist der Variable "violet" die Farbe violett zu
     ButtonFont=loadFont("ButtonsFont.vlw") #Font für den Text
@@ -94,8 +112,8 @@ def setup():
     sans = loadImage("sans.png")#############Bild von Sans
     backGround = loadImage("galaxy.png") #linker Teil des Hintergrunds
     heart = loadImage("heart.png") #Bild des Herzes
-    
     image(backGround, 0, 1) #Galaxy Hintergrund
+    
     
     FightInterface()
 
