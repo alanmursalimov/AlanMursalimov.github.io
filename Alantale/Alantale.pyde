@@ -1,9 +1,8 @@
-x = 600 # Startposition des Herzes
+x = 575 # Startposition des Herzes
 y = 525 # Startposition des Herzes
 Keys = []
-h = 0 #Healhtbar Minderung Rechteck grösse
 
-    
+h = 0 #Healhtbar Minderung Rechteck grösse
 w_heart = 45 
 h_heart = 30
 
@@ -71,19 +70,18 @@ a = 100
 b = 1075 
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
-    
     global a, b
-    s = 20
-    image(bone_vert, a, 400, 20, 250)
-    image(bone_vert, b, 400, 20, 250)
-#    a = a + 2
-#    b = b - 2
-    checkCollision(a, 400, 20, 250)
-    checkCollision(b, 400, 20, 250)
-    if a >= 1075:
-        a = 2000
-    if b <= 100:
-        b = -2000
+    if millis() >= 2000:
+        image(bone_vert, a, 400, 20, 250)
+        image(bone_vert, b, 400, 20, 250)
+        a = a + 3
+        b = b - 3
+        checkCollision(a, 400, 20, 250)
+        checkCollision(b, 400, 20, 250)
+        if a >= 1075:
+            a = 2000
+        if b <= 100:
+            b = -2000
         
     #for i in range(300, 650, s):
      #   image(bone_vert, i, i, 20, 250)
