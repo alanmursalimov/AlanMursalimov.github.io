@@ -5,8 +5,6 @@ Keys = []
 h = 0 #Healhtbar Minderung Rechteck grösse
 w_heart = 45 
 h_heart = 30
-
-Aussagen = ""
 #Die Funktion "checkCollision", für das ganze Herz, wurde von Gemini 3 Pro geschrieben.
 #Es berechnet die Ecken des Herzes und der Knochen. Danach schaut es in jedem Frame nach ob sich diese Werte überschneiden. 
 #Wenn dies stimmt, wächst das rote rechteck
@@ -40,7 +38,7 @@ def checkCollision(bx, by, bw, bh):
 
 
 
-#Unterprogramm zut Erstellung der Texte in den Boxen
+#Unterprogramm zur Erstellung der Texte in den Boxen
 def Button(x, y, w, h, tx): 
     stroke(violett) #färbt die Knöpfe violett
     strokeWeight(4)
@@ -49,12 +47,13 @@ def Button(x, y, w, h, tx):
     
     fill(violett) #färbt den Text violett
     textAlign(CENTER, CENTER) #richtet den Text in der Mitte aus
+    textFont(ButtonFont, 60)
     text(tx, x+w/2, y+h/2) #berechnet die Mitte der Box für den Text
 
 
 #Zeichnet den "StartScreen", indem es die Kampfbox, die Knöpfe und die Healthbar reinzeichnet 
 def FightInterface():
-    image(sans, 500, 38) #Bild von Sans #######unfinished
+    image(sans, 500, 38) #Bild von Sans 
     
     fill(255, 255, 0)
     strokeWeight(4)
@@ -72,63 +71,70 @@ def FightInterface():
     
     
    
-    
 a = 100
-b = 1075 
+b = 1075  
+v = 5
+Pos_bone1 = 400
 
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
-    global a, b, Pos_xb, Pos_yb, Aussagen
-    Pos_xb = 650
-    Pos_yb = 0
-    Aussagen = "Greetings child. I see you're lost. Want me to teleport you to your home with magic?"
-    textFont(ButtonFont, 25)
-    textAlign(LEFT, TOP)
-    if millis() >= 1000:
+    global a, b, Pos_xb, Pos_yb, Aussagen, v, Pos_bone1
+    Pos_xb = 650 #X-Position der Sprechblase
+    Pos_yb = 0 #Y-Position der Sprechblase
+    textFont(speech, 25)
+    textAlign(LEFT, TOP) #Positioniert den Text oben links
+    #Sobald sich die Zeit innerhalb des Intervalls zwischen 1 und 5 Sekunden 
+    #befindet, zeichnet er die erste Sprechblase mit dem Text
+    if millis() >= 1000 and millis() < 5000: 
         image(bubble, Pos_xb, Pos_yb, 350, 192)
-        text(Aussagen, Pos_xb+125, Pos_yb+20, 200, 250)
-        if millis() >= 5000:
-            Aussagen = "I guess not today"
-            text(Aussagen, Pos_xb+125, Pos_yb+20, 200, 250)
-    
-    if millis() >= 10000:
-        image(bone_vert, a, 400, 20, 250)
-        image(bone_vert, b, 400, 20, 250)
-        a = a + 3
-        b = b - 3
-        checkCollision(a, 400, 20, 250)
-        checkCollision(b, 400, 20, 250)
-        if a >= 1075:
-            a = 2000
-        if b <= 100:
-            b = -2000
-    
+        text("Greetings child. I see you're lost. Want me to teleport you to your home with magic?", 
+             int(Pos_xb+125), int(Pos_yb+20), 200, 250)
+        
+    #Das gleiche wie beim ersten Intervall aber zwischen 5 und 7 Sekunden.
+    #Dabei wird ein neues Bild von Sans mit geschlossenen Augen und eine neue Sprechblase mit neuem Text gezeichnet
+    elif millis() >= 5000 and millis() < 7000:
+            image(sans_closed, 500, 38)
+            image(bubble, Pos_xb, Pos_yb, 350, 192)
+            text("I guess not today", 
+                 int(Pos_xb+125), int(Pos_yb+20), 200, 250)
+    #Sobald die Zeit über oder gleich 7.5 Sekunden ist, beginnt die erste Attacke mit 2 Knochen.
+    #Die Knochen bewegen sich von den Seitenrändern der Kampfbox zu der anderen Seite und prallen
+    #beim Erreichen des Randes wieder ab. 
+    elif millis() >= 7500 and millis() < 13800:
+        image(bone_vert, a, Pos_bone1, 20, 250)
+        image(bone_vert, b, Pos_bone1, 20, 250)
+        a = a + v
+        b = b - v
+        checkCollision(a, Pos_bone1, 20, 250)
+        checkCollision(b, Pos_bone1, 20, 250)
+        if a >= 1050:
+            v = -v
+            Pos_bone1 = Pos_bone1 + 40
         
         
 def setup():
-    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround
+    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech
     size(1200, 850)
     pixelDensity(1)
+    
     violett =  color(127, 0, 255) #weist der Variable "violet" die Farbe violett zu
     ButtonFont=loadFont("ButtonsFont.vlw") #Font für den Text
-    textFont(ButtonFont, 60)
-    frameRate(90)
+    speech = loadFont("speech.vlw")
     
     bone_vert = loadImage("bone_vertical.png")
-   # bone_horizontal = loadImage("bone_horizontal.png")
+    bone_horizontal = loadImage("bone_horizontal.png")
     
     sans = loadImage("sans.png") #normaler Sans
-   # sans_clock = loadImage("sans_clock.png") #Sans mit der Uhr als Auge
-   # sans_death = loadImage("sans_death.gif") #GIF des sterbenden Sans
-   # sans_closed = loadImage("sans_eyes_closed.png") 
-   # sans_purple = loadImage("sans_purple_eyes.png") 
+    sans_clock = loadImage("sans_clock.png") #Sans mit der Uhr als Auge
+    sans_death = loadImage("sans_death.gif") #GIF des sterbenden Sans
+    sans_closed = loadImage("sans_eyes_closed.png") 
+    sans_purple = loadImage("sans_purple_eyes.png") 
     
     backGround = loadImage("galaxy.png") #linker Teil des Hintergrund
     heart = loadImage("heart.png") #Bild des Herzes
     bubble = loadImage("bubble.png") 
     
-   
-    #FightInterface()
+    
 
 
 
@@ -141,11 +147,6 @@ def draw():
     strokeWeight(8) 
     fill(0)
     rect(100, 400, 1000, 300) #Kampfbox, in der sich das Herz bewegt
-    
-   # fill(255, 0, 0)
-   # noStroke()
-   # rect(1132, 452, 27, h) #Rechteck für die Minderung des Healthbars
-    
     
     image(heart, x, y) #Bild vom Herz, das sich bewegt
     Attacke1()
@@ -163,9 +164,6 @@ def draw():
         x = x-5
     if RIGHT in Keys:
         x = x+5
-
-
-
 
 
 #Wenn eine Pfeiltaste gedrückt wird speichert es diesen Wert (z.B. "UP") in der Liste "Keys"
