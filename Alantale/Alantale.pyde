@@ -3,7 +3,7 @@ y = 525 # Startposition des Herzes
 Keys = []
 
 h = 0 #Healhtbar Minderung Rechteck grösse
-w_heart = 45 
+w_heart = 32
 h_heart = 30
 #Die Funktion "checkCollision", für das ganze Herz, wurde von Gemini 3 Pro geschrieben.
 #Es berechnet die Ecken des Herzes und der Knochen. Danach schaut es in jedem Frame nach ob sich diese Werte überschneiden. 
@@ -14,11 +14,20 @@ def checkCollision(bx, by, bw, bh):
     bw, bh = bone width and height
     """
     global x, y, h
+    ####################
+    noFill()
+    strokeWeight(1)
     
+    stroke(0, 255, 0)
+    rect(x+13, y+10, w_heart, h_heart+5)
+    
+    stroke(255, 0, 0)
+    rect(bx, by, bw, bh)
+    ####################
     # Calculate edges of the heart
-    heart_left = x
+    heart_left = x + 13
     heart_right = x + w_heart 
-    heart_top = y+5
+    heart_top = y+10
     heart_bottom = y + h_heart
     
     # Calculate edges of the bone
@@ -35,6 +44,9 @@ def checkCollision(bx, by, bw, bh):
         
         # If all are true, they are touching
         h = h + 1 # Increase damage
+    #if h >= 200:
+     #   background(0)
+      #  exit()
 
 
 
@@ -71,11 +83,10 @@ def FightInterface():
     
     
    
-a = 100
-b = 1075  
-v = 5
-Pos_bone1 = 400
-
+a = 100 #x position des ersten Knochen
+b = 1075  #x position des zweiten Knochen
+v = 5 #Geschwindigkeit der BEwegung
+Pos_bone1 = 400 #X Position der Knochen
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
     global a, b, Pos_xb, Pos_yb, Aussagen, v, Pos_bone1
@@ -83,6 +94,7 @@ def Attacke1():
     Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
     textAlign(LEFT, TOP) #Positioniert den Text oben links
+    
     #Sobald sich die Zeit innerhalb des Intervalls zwischen 1 und 5 Sekunden 
     #befindet, zeichnet er die erste Sprechblase mit dem Text
     if millis() >= 1000 and millis() < 5000: 
@@ -110,29 +122,57 @@ def Attacke1():
         if a >= 1050:
             v = -v
             Pos_bone1 = Pos_bone1 + 40
+            
+PosWave = -3000
+#PosHitboxY = 700
+def Attacke2():
+    global PosWave, PosHitboxY, wave
+    Pos_xb = 650 #X-Position der Sprechblase
+    Pos_yb = 0 #Y-Position der Sprechblase
+    textFont(speech, 25)
+    textAlign(LEFT, TOP) #Positioniert den Text oben links
+    
+    #Sobald das Zeitintervall zwischen 14 und 17 Sekunden liegt, wird eine Sprechblase gezeichnet
+    if millis() >= 14000 and millis() < 17000:
+        image(bubble, Pos_xb, Pos_yb, 350, 192)
+        text("Not bad. Let's increase the difficulty", 
+             int(Pos_xb+125), int(Pos_yb+20), 200, 250)
+        
+    #Sobald das Zeitintervall zwischen 18 und 28 Sekunden liegt, 
+    #kommt das Bild mit Knochen die wie eine Welle positioniert sind
+    elif millis() >= 18000 and millis() < 28000:
+        image(sans_purple, 500, 38) 
+        image(bone_wave, PosWave, 400) 
+        PosWave = PosWave + 7
+        #Die Schleife zeichnet die Hitbox für die welligen Knochen mithilfe einer Sinusfunktion
+        for i in range(-100, 2850, 30):
+            PosY = 600 + sin(i*0.00495) * 50
+            checkCollision(i+PosWave+120, PosY, 10, 50)
+            checkCollision(i+PosWave+120, PosY-150, 10, 50)
         
         
 def setup():
-    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech
+    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple
     size(1200, 850)
-    pixelDensity(1)
+    pixelDensity(1) #Diese Funktion ist für das rendering der Bilder da. Sorgt auch für flüssiges Gameplay
     
     violett =  color(127, 0, 255) #weist der Variable "violet" die Farbe violett zu
     ButtonFont=loadFont("ButtonsFont.vlw") #Font für den Text
-    speech = loadFont("speech.vlw")
+    speech = loadFont("speech.vlw") #Font für die Sprechblase
     
-    bone_vert = loadImage("bone_vertical.png")
-    bone_horizontal = loadImage("bone_horizontal.png")
+    bone_vert = loadImage("bone_vertical.png") #vertikaler Knochen
+    bone_horizontal = loadImage("bone_horizontal.png") #horizontaler Knochen
+    bone_wave = loadImage("bone_wave.png") #wellige Reihe an Knochen
     
     sans = loadImage("sans.png") #normaler Sans
     sans_clock = loadImage("sans_clock.png") #Sans mit der Uhr als Auge
     sans_death = loadImage("sans_death.gif") #GIF des sterbenden Sans
-    sans_closed = loadImage("sans_eyes_closed.png") 
-    sans_purple = loadImage("sans_purple_eyes.png") 
+    sans_closed = loadImage("sans_eyes_closed.png") #Sans mit geschlossenen Augen
+    sans_purple = loadImage("sans_purple_eyes.png") #Sans mit violetten Augen
     
     backGround = loadImage("galaxy.png") #linker Teil des Hintergrund
     heart = loadImage("heart.png") #Bild des Herzes
-    bubble = loadImage("bubble.png") 
+    bubble = loadImage("bubble.png") #Bild einer Sprechblase
     
     
 
@@ -150,6 +190,7 @@ def draw():
     
     image(heart, x, y) #Bild vom Herz, das sich bewegt
     Attacke1()
+    Attacke2()
     
     
     h = constrain(h, 0, 200) #Limitiert das Rechteck, das den HP runterbringt
