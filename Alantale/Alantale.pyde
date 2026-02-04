@@ -44,12 +44,7 @@ def checkCollision(bx, by, bw, bh):
         
         # If all are true, they are touching
         h = h + 1 # Increase damage
-    if h >= 200:
-        background(0)
-        image(heart,width/2-30,height/2-30)
-        delay(1000)
-        image(loadImage("broken_heart.png"),width/2-30,height/2-30)
-        exit()
+
 
 
 
@@ -195,8 +190,17 @@ def draw():
     rect(100, 400, 1000, 300) #Kampfbox, in der sich das Herz bewegt
     
     image(heart, x, y) #Bild vom Herz, das sich bewegt
-    Attacke1()
-    Attacke2()
+    if h <= 200:
+        Attacke1()
+        Attacke2()
+        
+    if h >= 200:
+        background(0)
+        image(heart,width/2-30,height/2-30)
+        delay(1000)
+        background(0)
+        image(loadImage("broken_heart.png"),width/2-30,height/2-30)
+        exit()
     
     
     h = constrain(h, 0, 200) #Limitiert das Rechteck, das den HP runterbringt
