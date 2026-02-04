@@ -44,9 +44,12 @@ def checkCollision(bx, by, bw, bh):
         
         # If all are true, they are touching
         h = h + 1 # Increase damage
-    #if h >= 200:
-     #   background(0)
-      #  exit()
+    if h >= 200:
+        background(0)
+        image(heart,width/2-30,height/2-30)
+        delay(1000)
+        image(loadImage("broken_heart.png"),width/2-30,height/2-30)
+        exit()
 
 
 
