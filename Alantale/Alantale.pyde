@@ -83,13 +83,13 @@ def FightInterface():
     
     
    
-a = 100 #x position des ersten Knochen
-b = 1075  #x position des zweiten Knochen
+Xbone1 = 100 #x position des ersten Knochen
+Xbone2 = 1075  #x position des zweiten Knochen
 v = 5 #Geschwindigkeit der BEwegung
 Ybones = 400 #X Position der Knochen
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
-    global a, b, Pos_xb, Pos_yb, v, Ybones
+    global Xbone1, Xbone2, Pos_xb, Pos_yb, v, Ybones
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
@@ -113,13 +113,13 @@ def Attacke1():
     #Die Knochen bewegen sich von den Seitenrändern der Kampfbox zu der anderen Seite und prallen
     #beim Erreichen des Randes wieder ab. 
     elif millis() >= 7500 and millis() < 13800:
-        image(bone_vert, a, Ybones, 20, 250)
-        image(bone_vert, b, Ybones, 20, 250)
-        a = a + v
-        b = b - v
-        checkCollision(a, Ybones, 20, 250)
-        checkCollision(b, Ybones, 20, 250)
-        if a >= 1050:
+        image(bone_vert, Xbone1, Ybones, 20, 250)
+        image(bone_vert, Xbone2, Ybones, 20, 250)
+        Xbone1 = Xbone1 + v
+        Xbone2 = Xbone2 - v
+        checkCollision(Xbone1, Ybones, 20, 250)
+        checkCollision(Xbone2, Ybones, 20, 250)
+        if Xbone1 >= 1050:
             v = -v
             Ybones = Ybones + 40
             
