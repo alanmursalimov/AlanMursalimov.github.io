@@ -86,10 +86,10 @@ def FightInterface():
 a = 100 #x position des ersten Knochen
 b = 1075  #x position des zweiten Knochen
 v = 5 #Geschwindigkeit der BEwegung
-Pos_bone1 = 400 #X Position der Knochen
+Ybones = 400 #X Position der Knochen
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
-    global a, b, Pos_xb, Pos_yb, Aussagen, v, Pos_bone1
+    global a, b, Pos_xb, Pos_yb, v, Ybones
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
@@ -113,20 +113,20 @@ def Attacke1():
     #Die Knochen bewegen sich von den Seitenrändern der Kampfbox zu der anderen Seite und prallen
     #beim Erreichen des Randes wieder ab. 
     elif millis() >= 7500 and millis() < 13800:
-        image(bone_vert, a, Pos_bone1, 20, 250)
-        image(bone_vert, b, Pos_bone1, 20, 250)
+        image(bone_vert, a, Ybones, 20, 250)
+        image(bone_vert, b, Ybones, 20, 250)
         a = a + v
         b = b - v
-        checkCollision(a, Pos_bone1, 20, 250)
-        checkCollision(b, Pos_bone1, 20, 250)
+        checkCollision(a, Ybones, 20, 250)
+        checkCollision(b, Ybones, 20, 250)
         if a >= 1050:
             v = -v
-            Pos_bone1 = Pos_bone1 + 40
+            Ybones = Ybones + 40
             
 PosWave = -3000
-#PosHitboxY = 700
+Vwave = 7
 def Attacke2():
-    global PosWave, PosHitboxY, wave
+    global PosWave, PosHitboxY, V
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
@@ -136,19 +136,22 @@ def Attacke2():
     if millis() >= 14000 and millis() < 17000:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
         text("Not bad. Let's increase the difficulty", 
-             int(Pos_xb+125), int(Pos_yb+20), 200, 250)
+             Pos_xb+125, Pos_yb+20, 200, 250)
         
     #Sobald das Zeitintervall zwischen 18 und 28 Sekunden liegt, 
     #kommt das Bild mit Knochen die wie eine Welle positioniert sind
-    elif millis() >= 18000 and millis() < 28000:
+    elif millis() >= 18000 and millis() < 38000:
         image(sans_purple, 500, 38) 
         image(bone_wave, PosWave, 400) 
-        PosWave = PosWave + 7
+        PosWave = PosWave + Vwave
         #Die Schleife zeichnet die Hitbox für die welligen Knochen mithilfe einer Sinusfunktion
         for i in range(-100, 2850, 30):
             PosY = 600 + sin(i*0.00495) * 50
             checkCollision(i+PosWave+120, PosY, 10, 50)
             checkCollision(i+PosWave+120, PosY-150, 10, 50)
+            
+        if PosWave >= 1100:
+            Vwave = -Vwave
         
         
 def setup():
