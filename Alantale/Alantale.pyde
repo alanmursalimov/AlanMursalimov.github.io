@@ -124,7 +124,7 @@ def Attacke1():
 PosWave = -3000
 Vwave = 7
 def Attacke2():
-    global PosWave, PosHitboxY, V
+    global PosWave, PosHitboxY, Vwave
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
@@ -148,12 +148,16 @@ def Attacke2():
             checkCollision(i+PosWave+120, PosY, 10, 50)
             checkCollision(i+PosWave+120, PosY-150, 10, 50)
             
-        if PosWave >= 1100:
-            Vwave = -Vwave
+    if PosWave >= 1100:
+        image(sans_clock, 500, 38)
+        Vwave = -Vwave
+        
+Attacke3():
+    
         
         
 def setup():
-    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple
+    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock
     size(1200, 850)
     pixelDensity(1) #Diese Funktion ist für das rendering der Bilder da. Sorgt auch für flüssiges Gameplay
     
@@ -178,9 +182,9 @@ def setup():
     
 
 
-
+death_point = 0
 def draw():
-    global y, x, h
+    global y, x, h, death_point
     image(backGround, 0, 0) #Galaxy Hintergrund
     FightInterface()
     
@@ -195,14 +199,15 @@ def draw():
         Attacke2()
         
     if h >= 200:
+       # death_point = millis()
+        #if 5000 < millis()-death_point:
+         #   background(0)
+          #  image(heart, x, y)
         background(0)
-        image(heart,width/2-30,height/2-30)
-        delay(1000)
-        background(0)
-        image(loadImage("broken_heart.png"),width/2-30,height/2-30)
-        exit()
-    
-    
+           # image(loadImage("broken_heart.png"),x, y)
+            #exit()
+        
+
     h = constrain(h, 0, 200) #Limitiert das Rechteck, das den HP runterbringt
     x = constrain(x, 97, 1043) #Limitiert die Bewegungen des Herzes auf die Kampfbox
     y = constrain(y, 397, 643) #Limitiert die Bewegungen des Herzes auf die Kampfbox
