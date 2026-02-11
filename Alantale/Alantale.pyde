@@ -83,11 +83,11 @@ def FightInterface():
    
 Xbone1 = 100 #x position des ersten Knochen
 Xbone2 = 1075  #x position des zweiten Knochen
-v = 5 #Geschwindigkeit der BEwegung
+Vbones = 5 #Geschwindigkeit der Knochen
 Ybones = 400 #X Position der Knochen
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
-    global Xbone1, Xbone2, Pos_xb, Pos_yb, v, Ybones
+    global Xbone1, Xbone2, Pos_xb, Pos_yb, Vbones, Ybones
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
@@ -113,12 +113,12 @@ def Attacke1():
     elif millis() >= 7500 and millis() < 13800:
         image(bone_vert, Xbone1, Ybones, 20, 250)
         image(bone_vert, Xbone2, Ybones, 20, 250)
-        Xbone1 = Xbone1 + v
-        Xbone2 = Xbone2 - v
+        Xbone1 = Xbone1 + Vbones
+        Xbone2 = Xbone2 - Vbones
         checkCollision(Xbone1, Ybones, 20, 250)
         checkCollision(Xbone2, Ybones, 20, 250)
         if Xbone1 >= 1050:
-            v = -v
+            Vbones = -Vbones
             Ybones = Ybones + 40
             
 PosWave = -3000
@@ -152,7 +152,8 @@ def Attacke2():
         image(sans_clock, 500, 38)
         Vwave = -Vwave
         
-Attacke3():
+def Attacke3():
+    image(bone_horizontal, 2000, 500)
     
         
         
@@ -197,16 +198,20 @@ def draw():
     if h <= 200:
         Attacke1()
         Attacke2()
+        Attacke3()
         
+    #########################    
     if h >= 200:
-       # death_point = millis()
-        #if 5000 < millis()-death_point:
-         #   background(0)
-          #  image(heart, x, y)
-        background(0)
-           # image(loadImage("broken_heart.png"),x, y)
-            #exit()
-        
+        if death_point == 0:
+            death_point = millis()
+        elif millis() - death_point > 1000:
+            background(0)
+            image(heart, x, y)
+        elif millis() - death_point > 2000:
+            background(0)
+            image(loadImage("broken_heart.png"),x, y)
+            exit()
+       ################################noch nicht fertig!!! 
 
     h = constrain(h, 0, 200) #Limitiert das Rechteck, das den HP runterbringt
     x = constrain(x, 97, 1043) #Limitiert die Bewegungen des Herzes auf die Kampfbox
