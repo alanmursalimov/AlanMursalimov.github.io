@@ -139,26 +139,33 @@ def Attacke2():
     #Sobald das Zeitintervall zwischen 18 und 28 Sekunden liegt, 
     #kommt das Bild mit Knochen die wie eine Welle positioniert sind
     elif millis() >= 18000 and millis() < 38000:
-        image(sans_purple, 500, 38) 
+        if millis() >= 18000 and millis() < 28000:
+            image(sans_purple, 500, 38) 
+            PosWave = PosWave + Vwave
+            
+        elif millis() >= 28000 and millis() < 38000:
+            image(sans_clock, 500, 38)
+            PosWave = PosWave - Vwave
+        
         image(bone_wave, PosWave, 400) 
-        PosWave = PosWave + Vwave
+        
         #Die Schleife zeichnet die Hitbox für die welligen Knochen mithilfe einer Sinusfunktion
         for i in range(-100, 2850, 30):
             PosY = 600 + sin(i*0.00495) * 50
             checkCollision(i+PosWave+120, PosY, 10, 50)
             checkCollision(i+PosWave+120, PosY-150, 10, 50)
             
-    if PosWave >= 1100:
-        image(sans_clock, 500, 38)
-        Vwave = -Vwave
         
+       
 def Attacke3():
-    image(bone_horizontal, 2000, 500)
+    if millis() >= 38000 and millis() < 50000:
+        Ybone_horizontal = y+15
+        image(bone_horizontal, 1000, Ybone_horizontal, 250, 20)
     
         
         
 def setup():
-    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock
+    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal
     size(1200, 850)
     pixelDensity(1) #Diese Funktion ist für das rendering der Bilder da. Sorgt auch für flüssiges Gameplay
     
