@@ -179,22 +179,30 @@ def Attacke2():
 Ybone_horizontal = False
 Ybone_Pos = 0
 Xbone_Pos = 1000
+FrameCounter = 0
 def Attacke3():
     """
     Schiesst horizontale Knochen von den Seiten auf der Höhe des Herzes nach links oder rechts
     """
-    global Ybone_horizontal, Ybone_Pos, Xbone_Pos
-
+    global Ybone_horizontal, Ybone_Pos, Xbone_Pos, FrameCounter, side
     if millis() >= 38000 and millis() < 50000:
             if Ybone_horizontal == False:
                 Ybone_Pos = y+15
                 Ybone_horizontal = True
                 Xbone_Pos = 1000
             image(bone_horizontal, Xbone_Pos, Ybone_Pos, 250, 20)
-            Xbone_Pos = Xbone_Pos - 10
             checkCollision(Xbone_Pos, Ybone_Pos, 250, 20)
-            print(Ybone_horizontal)
-            print(millis())
+            Xbone_Pos = Xbone_Pos - 10
+            
+            FrameCounter =  FrameCounter + 1
+            if  FrameCounter >= 50:
+                side = round(random(1, 2))
+                FrameCounter = 0
+            if side == 1:
+                image(bone_horizontal, side+100, Ybone_Pos, 250, 20)
+            elif side == 2:
+                image(bone_horizontal, side*1000, Ybone_Pos, 250, 20)
+                #### to be fixed
     elif millis() >= 40000:
         Ybone_horizontal = False
     
