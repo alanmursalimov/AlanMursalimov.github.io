@@ -2,7 +2,7 @@ x = 575 # Startposition des Herzes
 y = 525 # Startposition des Herzes
 Keys = []
 
-h = 0 #Healhtbar Minderung Rechteck grösse
+height_healthbar = 0 #Healhtbar Minderung Rechteck grösse
 w_heart = 32
 h_heart = 30
 #Die Funktion "checkCollision", für das ganze Herz, wurde von Gemini 3 Pro geschrieben.
@@ -13,7 +13,7 @@ def checkCollision(bx, by, bw, bh):
     bx, by = bone x and y position
     bw, bh = bone width and height
     """
-    global x, y, h
+    global x, y, height_healthbar
     ####################
     noFill()
     strokeWeight(1)
@@ -43,13 +43,17 @@ def checkCollision(bx, by, bw, bh):
         heart_top < bone_bottom):
         
         # If all are true, they are touching
-        h = h + 1 # Increase damage
+        height_healthbar = height_healthbar + 1 # Increase damage
 
 
 
 
 #Unterprogramm zur Erstellung der Texte in den Boxen
-def Button(x, y, w, h, tx): 
+def Button(x, y, w, h, tx):
+    """
+    Unterfunktion für die Erstellung der dekorativen Knöpfe, wobei für die
+    Variablen Werte in der "Fightinetrface()" Unterfunktion eingesetzt werden.
+    """ 
     stroke(violett) #färbt die Knöpfe violett
     strokeWeight(4)
     fill(0)
@@ -63,6 +67,10 @@ def Button(x, y, w, h, tx):
 
 #Zeichnet den "StartScreen", indem es die Kampfbox, die Knöpfe und die Healthbar reinzeichnet 
 def FightInterface():
+    """
+    Zeichnet die Kampfbox in der sich das Herz bewegt und die dekorative 
+    Knöpfe
+    """
     image(sans, 500, 38) #Bild von Sans 
     
     fill(255, 255, 0)
@@ -71,7 +79,7 @@ def FightInterface():
     
     fill(255, 0, 0)
     noStroke()
-    rect(1132, 452, 27, h) #Rechteck für die Minderung des Healthbars
+    rect(1132, 452, 27, height_healthbar) #Rechteck für die Minderung des Healthbars
 
     Button(100, 730, 220, 80, "Fight") #"Fight"-Knopf
     Button(360, 730, 220, 80, "Act") #"Act"-Knopf
@@ -87,6 +95,11 @@ Vbones = 5 #Geschwindigkeit der Knochen
 Ybones = 400 #X Position der Knochen
 #Die erste Attacke die es im Spiel gibt. 
 def Attacke1():
+    """
+    2 Knochen von jeder Seite bewegen sich in die Gegenrichtung. Dabei muss 
+    man das Herz entweder ganz nach oben oder unten Bewegen um keinen Schaden 
+    zu kriegen.
+    """
     global Xbone1, Xbone2, Pos_xb, Pos_yb, Vbones, Ybones
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
@@ -124,6 +137,13 @@ def Attacke1():
 PosWave = -3000
 Vwave = 7
 def Attacke2():
+    """
+    Ein Bild von Knochen in verschiedener Grösse mit einer Welligen Hitbox 
+    (mit einer Sinusfunktion erstellt) bewegt sich nach rechts. Dabei muss 
+    das Herz sich in einem kleinem Raum nach oben und unten bewegen. Danach
+    bewegt sich die Hitbox nach links, was den Effekt ergibt dass die Zeit 
+    zurückgespult wird.
+    """
     global PosWave, PosHitboxY, Vwave
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
@@ -156,11 +176,27 @@ def Attacke2():
             checkCollision(i+PosWave+120, PosY-150, 10, 50)
             
         
-       
+Ybone_horizontal = False
+Ybone_Pos = 0
+Xbone_Pos = 1000
 def Attacke3():
+    """
+    Schiesst horizontale Knochen von den Seiten auf der Höhe des Herzes nach links oder rechts
+    """
+    global Ybone_horizontal, Ybone_Pos, Xbone_Pos
+
     if millis() >= 38000 and millis() < 50000:
-        Ybone_horizontal = y+15
-        image(bone_horizontal, 1000, Ybone_horizontal, 250, 20)
+            if Ybone_horizontal == False:
+                Ybone_Pos = y+15
+                Ybone_horizontal = True
+                Xbone_Pos = 1000
+            image(bone_horizontal, Xbone_Pos, Ybone_Pos, 250, 20)
+            Xbone_Pos = Xbone_Pos - 10
+            checkCollision(Xbone_Pos, Ybone_Pos, 250, 20)
+            print(Ybone_horizontal)
+            print(millis())
+    elif millis() >= 40000:
+        Ybone_horizontal = False
     
         
         
@@ -192,7 +228,7 @@ def setup():
 
 death_point = 0
 def draw():
-    global y, x, h, death_point
+    global y, x, height_healthbar, death_point
     image(backGround, 0, 0) #Galaxy Hintergrund
     FightInterface()
     
@@ -202,13 +238,13 @@ def draw():
     rect(100, 400, 1000, 300) #Kampfbox, in der sich das Herz bewegt
     
     image(heart, x, y) #Bild vom Herz, das sich bewegt
-    if h <= 200:
+    if height_healthbar <= 200:
         Attacke1()
         Attacke2()
         Attacke3()
         
     #########################    
-    if h >= 200:
+    if height_healthbar >= 200:
         if death_point == 0:
             death_point = millis()
         elif millis() - death_point > 1000:
@@ -220,7 +256,7 @@ def draw():
             exit()
        ################################noch nicht fertig!!! 
 
-    h = constrain(h, 0, 200) #Limitiert das Rechteck, das den HP runterbringt
+    height_healthbar = constrain(height_healthbar, 0, 200) #Limitiert das Rechteck, das den HP runterbringt
     x = constrain(x, 97, 1043) #Limitiert die Bewegungen des Herzes auf die Kampfbox
     y = constrain(y, 397, 643) #Limitiert die Bewegungen des Herzes auf die Kampfbox
     #Bewegung mit WASD Tasten
