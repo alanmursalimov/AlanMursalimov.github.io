@@ -1,17 +1,15 @@
-x = 575 # Startposition des Herzes
-y = 525 # Startposition des Herzes
+x = 575 #x-coordinate of the heart's starting position (will be changed by moving the heart)
+y = 525 #y-coordinate of the heart's starting position (will be changed by moving the heart) 
 Keys = []
 
-height_healthbar = 0 #Healhtbar Minderung Rechteck grösse
+height_healthbar = 0 #original height of the red rectangle which is used to display the player's health 
 w_heart = 32
 h_heart = 30
-#Die Funktion "checkCollision", für das ganze Herz, wurde von Gemini 3 Pro geschrieben.
-#Es berechnet die Ecken des Herzes und der Knochen. Danach schaut es in jedem Frame nach ob sich diese Werte überschneiden. 
-#Wenn dies stimmt, wächst das rote rechteck
 def checkCollision(bx, by, bw, bh):
     """
-    bx, by = bone x and y position
-    bw, bh = bone width and height
+    the function "checkCollision" was written by Gemini 3 Pro 
+    It calculates the corners of the heart and bones. After thet it checks for overlapping values every frame. 
+    if they overlap, the red rectangle grows
     """
     global x, y, height_healthbar
     ####################
@@ -24,31 +22,31 @@ def checkCollision(bx, by, bw, bh):
     stroke(255, 0, 0)
     rect(bx, by, bw, bh)
     ####################
-    # Calculate edges of the heart
+    #calculates edges of the heart
     heart_left = x + 13
     heart_right = x + w_heart 
     heart_top = y+10
     heart_bottom = y + h_heart
     
-    # Calculate edges of the bone
+    #calculates edges of the bone
     bone_left = bx
     bone_right = bx + bw
     bone_top = by
     bone_bottom = by + bh
     
-    # Check for Overlap
+    #checks for overlap
     if (heart_right > bone_left and 
         heart_left < bone_right and 
         heart_bottom > bone_top and 
         heart_top < bone_bottom):
         
-        # If all are true, they are touching
-        height_healthbar = height_healthbar + 1 # Increase damage
+        #if everything is true they are touching
+        height_healthbar = height_healthbar + 1 #increases damage
 
 
 
 
-#Unterprogramm zur Erstellung der Texte in den Boxen
+#procedure for creating the text in the boxes
 def Button(x, y, w, h, tx):
     """
     Unterfunktion für die Erstellung der dekorativen Knöpfe, wobei für die
