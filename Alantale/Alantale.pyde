@@ -7,7 +7,7 @@ w_heart = 32
 h_heart = 30
 def checkCollision(bx, by, bw, bh):
     """
-    the function "checkCollision" was written by Gemini 3 Pro 
+    The function "checkCollision" was written by Gemini 3 Pro 
     It calculates the corners of the heart and bones. After thet it checks for overlapping values every frame. 
     if they overlap, the red rectangle grows
     """
@@ -92,13 +92,13 @@ Xbone2 = 1075  #x position des zweiten Knochen
 Vbones = 5 #Geschwindigkeit der Knochen
 Ybones = 400 #X Position der Knochen
 #Die erste Attacke die es im Spiel gibt. 
-def Attacke1():
+def Attack1():
     """
     2 Knochen von jeder Seite bewegen sich in die Gegenrichtung. Dabei muss 
     man das Herz entweder ganz nach oben oder unten Bewegen um keinen Schaden 
     zu kriegen.
     """
-    global Xbone1, Xbone2, Pos_xb, Pos_yb, Vbones, Ybones
+    global Xbone1, Xbone2, Pos_xb, Pos_yb, Vbones, Ybones, Pos_xb, Pos_yb
     Pos_xb = 650 #X-Position der Sprechblase
     Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
@@ -134,7 +134,7 @@ def Attacke1():
             
 PosWave = -3000
 Vwave = 7
-def Attacke2():
+def Attack2():
     """
     Ein Bild von Knochen in verschiedener Grösse mit einer Welligen Hitbox 
     (mit einer Sinusfunktion erstellt) bewegt sich nach rechts. Dabei muss 
@@ -143,11 +143,6 @@ def Attacke2():
     zurückgespult wird.
     """
     global PosWave, PosHitboxY, Vwave
-    Pos_xb = 650 #X-Position der Sprechblase
-    Pos_yb = 0 #Y-Position der Sprechblase
-    textFont(speech, 25)
-    textAlign(LEFT, TOP) #Positioniert den Text oben links
-    
     #Sobald das Zeitintervall zwischen 14 und 17 Sekunden liegt, wird eine Sprechblase gezeichnet
     if millis() >= 14000 and millis() < 17000:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
@@ -179,34 +174,34 @@ Ybone_Pos = 0
 Xbone_Pos = 1000
 FrameCounter = 0
 side = 0
-def Attacke3():
+def Attack3():
     """
     Schiesst horizontale Knochen von den Seiten auf der Höhe des Herzes nach links oder rechts
     """
     global Ybone_horizontal, Ybone_Pos, Xbone_Pos, FrameCounter, side
-    if millis() >= 38000 and millis() < 100000:
+    if millis() >= 38000 and millis() < 150000:
+            if Xbone_Pos >= 1000:
+                Ybone_horizontal = False
+                
             if Ybone_horizontal == False:
                 Ybone_Pos = y+15
+                Xbone_Pos = 0
+                side = round(random(0, 2))
                 Ybone_horizontal = True
-                Xbone_Pos = 1000
-            #image(bone_horizontal, Xbone_Pos, Ybone_Pos, 250, 20)
-            #checkCollision(Xbone_Pos, Ybone_Pos, 250, 20)
-            Xbone_Pos = Xbone_Pos - 10
+                
             
+            Xbone_Pos = Xbone_Pos + 15
             FrameCounter =  FrameCounter + 1 #Addiert jedes Frame den Wert 1 zu der Variable "FrameCounter"
-            if  FrameCounter >= 50:
-                side = round(random(3))
-                FrameCounter = 0
+            
+            #if  FrameCounter >= 60 and FrameCounter <= 120:
+             #   FrameCounter = 0
             if side == 0:
-                image(bone_horizontal, side+100-Xbone_Pos, Ybone_Pos, 250, 20)
+                image(bone_horizontal, side+100+Xbone_Pos, Ybone_Pos, 250, 20)
                 Ybone_horizontal = True
+            else:
+                image(bone_horizontal, side*1000-Xbone_Pos, Ybone_Pos, 250, 20)
                 Ybone_horizontal = True
-            elif side == 1:
-                image(bone_horizontal, side*1000+Xbone_Pos, Ybone_Pos, 250, 20)
-                Ybone_horizontal = True
-                Ybone_horizontal = True
-    elif millis() >= 40000:
-        Ybone_horizontal = False
+            
     
         
         
@@ -249,9 +244,9 @@ def draw():
     
     image(heart, x, y) #Bild vom Herz, das sich bewegt
     if height_healthbar <= 200:
-        Attacke1()
-        Attacke2()
-        Attacke3()
+        Attack1()
+        Attack2()
+        Attack3()
         
     #########################    
     if height_healthbar >= 200:
