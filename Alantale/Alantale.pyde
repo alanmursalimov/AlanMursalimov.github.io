@@ -1,6 +1,8 @@
 x = 575 #x-coordinate of the heart's starting position (will be changed by moving the heart)
 y = 525 #y-coordinate of the heart's starting position (will be changed by moving the heart) 
 Keys = []
+Pos_xb = 650 #x-position of the speech bubble
+Pos_yb = 0 #y-position of the speech bubble
 
 height_healthbar = 0 #original height of the red rectangle which is used to display the player's health 
 w_heart = 32
@@ -90,15 +92,12 @@ Xbone1 = 100 #x position of the first bone
 Xbone2 = 1075  #x position of the second bone
 Vbones = 5 #bonespeed
 Ybones = 400 #y coordinate of the bones
-#Sans' first attack 
 def Attack1():
     """
     2 bones on each side move in the opposite direction. In doing so, 
     you must move the heart either all the way up or all the way down to avoid damage
     """
     global Xbone1, Xbone2, Pos_xb, Pos_yb, Vbones, Ybones
-    Pos_xb = 650 #x-position of the speech bubble
-    Pos_yb = 0 #y-position of the speech bubble
     textFont(speech, 25)
     textAlign(LEFT, TOP) #positions the text in the top left
 
@@ -144,8 +143,6 @@ def Attack2():
     rewinding time.
     """
     global PosWave, PosHitboxY, Vwave
-    Pos_xb = 650 #x-position of the speech bubble
-    Pos_yb = 0 #y-position of the speech bubble
     textFont(speech, 25)
     textAlign(LEFT, TOP) #positions the text in the top left
     
@@ -178,14 +175,13 @@ def Attack2():
 Ybone_horizontal = False
 Ybone_Pos = 0
 Xbone_Pos = 1000
-FrameCounter = 0
 side = 0
 def Attack3():
     """
     Shoots horizontal bones from the sides at heart level to the left or right.
     """
     global Ybone_horizontal, Ybone_Pos, Xbone_Pos, FrameCounter, side
-    if millis() >= 38000 and millis() < 150000:
+    if millis() >= 38000 and millis() < 53000:
             if Xbone_Pos >= 1300:
                 Ybone_horizontal = False
                 
@@ -209,12 +205,44 @@ def Attack3():
                 
     else:
         Ybone_horizontal = False
+        
+def SpawnWand():
+    pushMatrix()
+    translate(575, 525)
+    rotate(PI/4.0)
+    image(wand, -120, -90, 240, 180)
+    popMatrix()
+    
+    
+    
+def Attack4():
+    textFont(speech, 25)
+    textAlign(LEFT, TOP)
+    
+    if millis() >= 500 and millis() < 5500:
+            image(bubble, Pos_xb, Pos_yb, 350, 192)
+            text("Roses are red, violets are blue", 
+                 Pos_xb+125, Pos_yb+20, 200, 250)
+    if millis() >= 5500 and millis() < 10500:
+        image(bubble, Pos_xb, Pos_yb, 350, 192)
+        text("Everyone is  gone, and I am stuck here with you.", 
+                 Pos_xb+125, Pos_yb+20, 200, 250)
+    if millis() >= 10500 and millis() < 15500:
+        image(bubble, Pos_xb, Pos_yb, 350, 192)
+        text("I am tired of waiting, so lets end this fast", 
+                 Pos_xb+125, Pos_yb+20, 200, 250)
+    if millis() >= 15500 and millis() < 20500:
+        image(bubble, Pos_xb, Pos_yb, 350, 192)
+        text("Cause you are the one leaving, and I am the one staying.", 
+                 Pos_xb+125, Pos_yb+20, 200, 250)
+        
+
             
     
         
         
 def setup():
-    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal
+    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal, wand, lightning
     size(1200, 850)
     pixelDensity(1) #This function is used for rendering images. It also ensures smooth gameplay.
     
@@ -235,6 +263,8 @@ def setup():
     backGround = loadImage("galaxy.png") #image of the background
     heart = loadImage("heart.png") #image of the heart
     bubble = loadImage("bubble.png") #image of the speech bubble
+    wand = loadImage("wand.png")
+    lightning = loadImage("lightning.png")
     
     
 
@@ -252,9 +282,11 @@ def draw():
     
     image(heart, x, y) #image of the heart that moves
     if height_healthbar <= 200:
-        Attack1()
-        Attack2()
-        Attack3()
+        #Attack1()
+        #Attack2()
+        #Attack3()
+        Attack4()
+        SpawnWand()
         
     #########################    
     if height_healthbar >= 200:
