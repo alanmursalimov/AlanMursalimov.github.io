@@ -123,15 +123,13 @@ def Attack1():
     elif millis() >= 7500 and millis() < 13800:
         image(bone_vert, Xbone1, Ybones, 20, 250)
         image(bone_vert, Xbone2, Ybones, 20, 250)
-        checkCollision(Xbone1, Ybones, 20, 250)
-        checkCollision(Xbone2, Ybones, 20, 250)
         Xbone1 = Xbone1 + Vbones
         Xbone2 = Xbone2 - Vbones
-
+        checkCollision(Xbone1, Ybones, 20, 250)
+        checkCollision(Xbone2, Ybones, 20, 250)
         if Xbone1 >= 1050:
             Vbones = -Vbones
             Ybones = Ybones + 40
-    
             
 PosWave = -3000
 Vwave = 7
@@ -144,10 +142,10 @@ def Attack2():
     rewinding time.
     """
     global PosWave, PosHitboxY, Vwave
-    Pos_xb = 650 #x-position of the speech bubble
-    Pos_yb = 0 #y-position of the speech bubble
+    Pos_xb = 650 #x-position der Sprechblase
+    Pos_yb = 0 #Y-Position der Sprechblase
     textFont(speech, 25)
-    textAlign(LEFT, TOP) #positions the text in the top left
+    textAlign(LEFT, TOP) #Positioniert den Text oben links
     
     #As soon as the time interval is between 14 and 17 seconds, a speech bubble is drawn.
     if millis() >= 14000 and millis() < 17000:
@@ -186,27 +184,23 @@ def Attack3():
     """
     global Ybone_horizontal, Ybone_Pos, Xbone_Pos, FrameCounter, side
     if millis() >= 38000 and millis() < 150000:
-            if Xbone_Pos >= 1300:
+            if Xbone_Pos >= 1500 or Xbone_Pos <= 0:
                 Ybone_horizontal = False
-                
-            if Xbone_Pos >= -250 and Xbone_Pos <= 1200:
-                Ybone_horizontal = True
                 
             if Ybone_horizontal == False:
                 Ybone_Pos = y+15
                 Xbone_Pos = 0
-                side = int(random(0, 2))
+                side = round(random(0, 2))
                 Ybone_horizontal = True
-            
-            Xbone_Pos = Xbone_Pos + 15    
-            
-            if side == 0:
-                image(bone_horizontal, side+Xbone_Pos, Ybone_Pos, 250, 20)
-                checkCollision(side+Xbone_Pos, Ybone_Pos, 250, 20)
-            else:
-                image(bone_horizontal, side*1200-Xbone_Pos, Ybone_Pos, 250, 20)
-                checkCollision(side*1200-Xbone_Pos, Ybone_Pos, 250, 20)
                 
+            Xbone_Pos = Xbone_Pos + 15
+                
+            if side == 0:
+                image(bone_horizontal, side+100+Xbone_Pos, Ybone_Pos, 250, 20)
+                Ybone_horizontal = True
+            else:
+                image(bone_horizontal, side*1000-Xbone_Pos, Ybone_Pos, 250, 20)
+                Ybone_horizontal = True
     else:
         Ybone_horizontal = False
             
@@ -242,15 +236,15 @@ def setup():
 death_point = 0
 def draw():
     global y, x, height_healthbar, death_point
-    image(backGround, 0, 0) #galaxy background
+    image(backGround, 0, 0) #Galaxy Hintergrund
     FightInterface()
     
     stroke(violett)
     strokeWeight(8) 
     fill(0)
-    rect(100, 400, 1000, 300) #battle box in which the heart moves
+    rect(100, 400, 1000, 300) #Kampfbox, in der sich das Herz bewegt
     
-    image(heart, x, y) #image of the heart that moves
+    image(heart, x, y) #Bild vom Herz, das sich bewegt
     if height_healthbar <= 200:
         Attack1()
         Attack2()
@@ -267,12 +261,12 @@ def draw():
             background(0)
             image(loadImage("broken_heart.png"),x, y)
             exit()
-       ################################not finished yet!!!
+       ################################noch nicht fertig!!! 
 
-    height_healthbar = constrain(height_healthbar, 0, 200) #limits the rectangle size that reduces HP
-    x = constrain(x, 97, 1043) #limits the heart's movement to the battle box in x direction
-    y = constrain(y, 397, 643) #limits the heart's movement to the battle box in y direction
-    #Movement with arrow keys
+    height_healthbar = constrain(height_healthbar, 0, 200) #Limitiert das Rechteck, das den HP runterbringt
+    x = constrain(x, 97, 1043) #Limitiert die Bewegungen des Herzes auf die Kampfbox
+    y = constrain(y, 397, 643) #Limitiert die Bewegungen des Herzes auf die Kampfbox
+    #Bewegung mit WASD Tasten
     if UP in Keys: 
         y = y-5
     if DOWN in Keys:
@@ -283,13 +277,13 @@ def draw():
         x = x+5
 
 
-#When an arrow key is pressed, its value (e.g. "UP") is stored in the "Keys" list
+#Wenn eine Pfeiltaste gedrückt wird speichert es diesen Wert (z.B. "UP") in der Liste "Keys"
 def keyPressed():
     if key == CODED:
         Keys.append(keyCode)
 
-#When an arrow key is released, its value is removed from the list.
-#This runs constantly so that a maximum of 2 values can be in the list at a time.
+#Wenn die Pfeiltaste losgelassen wird dann wird der Wert aus der Liste gelöscht. 
+#Das tut er ständig damit maximal 2 Werte in der Liste sein können.
 def keyReleased():
     if key == CODED:
         while keyCode in Keys:
