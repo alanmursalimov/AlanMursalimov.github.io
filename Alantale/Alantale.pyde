@@ -206,12 +206,26 @@ def Attack3():
     else:
         Ybone_horizontal = False
         
+        
+rotation_speed = 0
+rotation_speed_increase = 0.02
+rotation_angle = 0
 def SpawnWand():
-    pushMatrix()
-    translate(575, 525)
-    rotate(PI/4.0)
-    image(wand, -120, -90, 240, 180)
-    popMatrix()
+    global rotation_speed, rotation_speed_increase, rotation_angle
+    Middle_coordinates_radius = [565, 400, 300]
+    rotation_speed_increase = rotation_speed_increase + 0.00005
+    rotation_speed_increase = constrain(rotation_speed_increase, 0, 0.1)
+    rotation_speed = rotation_speed + rotation_speed_increase
+    
+    rotation_point_X= Middle_coordinates_radius[0]+Middle_coordinates_radius[2]*cos(rotation_speed)
+    rotation_point_Y = Middle_coordinates_radius[1]+Middle_coordinates_radius[2]*sin(rotation_speed)
+    
+    rotation_angle = rotation_angle + 0.0001
+    translate(0, 0) #-u-v/uv
+    rotate(rotation_angle)
+    
+    image(wand, rotation_point_X, rotation_point_Y, 240, 180)
+    image(lightning, rotation_point_X-200, rotation_point_Y+150, 250, 200)
     
     
     
