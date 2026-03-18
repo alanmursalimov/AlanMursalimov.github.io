@@ -265,30 +265,41 @@ def Attack4():
             hitbox_y = 555 + r * sin(rotate_angle/40.)
             checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
         
-
+End_pos_Y = 0
 def Attack5():
+    global End_pos_Y
     textFont(speech, 25)
     textAlign(LEFT, TOP)
     
-    if millis() >= 86000 and millis() < 1000000:
-        if millis() >= 1000 and millis() < 6000:
+    if millis() >= 90000 and millis() < 1000000:
+        image(sans_dizzy, 500, 38)
+        if millis() >= 100000 and millis() < 105000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
-            text("Huff. Puff. I'm getting dizzy.", 
+            text("*Huff. Puff.* I'm getting dizzy.", 
                     Pos_xb+125, Pos_yb+20, 200, 250)
-        if millis() >= 6000 and millis() < 11000:
+        if millis() >= 105000 and millis() < 110000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
-            text("You're strong. Huff. Puff. ", 
+            text("You're strong. *Huff. Puff.* ", 
                     Pos_xb+125, Pos_yb+20, 200, 250)
-        if millis() >= 11000 and millis() < 16000:
+        if millis() >= 115000 and millis() < 120000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
             text("Die!", 
                     Pos_xb+125, Pos_yb+20, 200, 250)
             
-        
-        if millis() >= 11000 and millis() < 16000:
+            End_pos_Y = End_pos_Y + 10
+            image(bone_vert, x, End_pos_Y, 20, 280)
+            checkCollision(x, End_pos_Y, 20, 280)        
+
+            
+        if millis() >= 20000 and millis() < 25000: ##adjust times
+            image(sans_death2, 500, 38)
+        if millis() >= 20000 and millis() < 25000:
+            image(sans_death3, 500, 38)
+        if millis() >= 25000 and millis() < 30000:
+            image(sans_death4, 500, 38)
         
 def setup():
-    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal, wand, lightning
+    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal, wand, lightning, sans_dizzy, sans_death2, sans_death3, sans_death4
     size(1200, 850)
     pixelDensity(1) #This function is used for rendering images. It also ensures smooth gameplay.
     
@@ -302,7 +313,10 @@ def setup():
     
     sans = loadImage("sans.png") #normal sans
     sans_clock = loadImage("sans_clock.png") #sans with a watch as an eye
-    sans_death = loadImage("sans_death.gif") #GIF of the dying sans
+    sans_dizzy = loadImage("sans_dizzy.png")
+    sans_death2 = loadImage("sans_death2.png")
+    sans_death3 = loadImage("sans_death3.png")
+    sans_death4 = loadImage("sans_death4.png")
     sans_closed = loadImage("sans_eyes_closed.png") #sans with his eyes closed
     sans_purple = loadImage("sans_purple_eyes.png") #sans purple eyes
     
@@ -331,8 +345,8 @@ def draw():
         #Attack1()
         #Attack2()
         #Attack3()
-        Attack4()
-        #SpawnWand()
+        #Attack4()
+        Attack5()
         
     #########################    
     if height_healthbar >= 200:
