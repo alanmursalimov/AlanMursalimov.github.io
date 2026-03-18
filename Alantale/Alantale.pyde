@@ -205,55 +205,87 @@ def Attack3():
                 
     else:
         Ybone_horizontal = False
-        
-        
-rotation_speed = 0
-rotation_speed_increase = 0.02
-rotation_angle = 0
-def SpawnWand():
-    global rotation_speed, rotation_speed_increase, rotation_angle
-    Middle_coordinates_radius = [565, 400, 300]
-    rotation_speed_increase = rotation_speed_increase + 0.00005
-    rotation_speed_increase = constrain(rotation_speed_increase, 0, 0.1)
-    rotation_speed = rotation_speed + rotation_speed_increase
-    
-    rotation_point_X= Middle_coordinates_radius[0]+Middle_coordinates_radius[2]*cos(rotation_speed)
-    rotation_point_Y = Middle_coordinates_radius[1]+Middle_coordinates_radius[2]*sin(rotation_speed)
-    
-    rotation_angle = rotation_angle + 0.0001
-    translate(0, 0) #-u-v/uv
-    rotate(rotation_angle)
-    
-    image(wand, rotation_point_X, rotation_point_Y, 240, 180)
-    image(lightning, rotation_point_X-200, rotation_point_Y+150, 250, 200)
     
     
     
+    
+rotate_angle = 0
 def Attack4():
+    global rotate_angle
     textFont(speech, 25)
     textAlign(LEFT, TOP)
     
-    if millis() >= 500 and millis() < 5500:
+    if millis() >= 54000 and millis() < 59000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
             text("Roses are red, violets are blue", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
-    if millis() >= 5500 and millis() < 10500:
+    if millis() >= 59500 and millis() < 64500:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
         text("Everyone is  gone, and I am stuck here with you.", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
-    if millis() >= 10500 and millis() < 15500:
+    if millis() >= 65000 and millis() < 70000:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
         text("I am tired of waiting, so lets end this fast", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
-    if millis() >= 15500 and millis() < 20500:
+    if millis() >= 70500 and millis() < 75500:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
         text("Cause you are the one leaving, and I am the one staying.", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
         
-
-            
-    
+    if millis() >= 76500 and millis() < 85000:
+        rotate_angle = rotate_angle + 1
         
+        pushMatrix()
+        translate(250, 555)
+        rotate(rotate_angle/40.)
+        image(bone_horizontal, -200, -10, 400, 20)
+        popMatrix()
+        for r in range(-200, 200, 20):
+            hitbox_x = 250 + r * cos(rotate_angle/40.) #formula for orbiting a point on the X axis
+            hitbox_y = 555 + r * sin(rotate_angle/40.) #formula for orbiting a point on the Y axis
+            checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
+        
+        pushMatrix()
+        translate(605, 555)
+        rotate(rotate_angle/40.)
+        image(bone_horizontal, -200, -10, 400, 20)
+        popMatrix()
+        for r in range(-200, 200, 20):
+            hitbox_x = 605 + r * cos(rotate_angle/40.)
+            hitbox_y = 555 + r * sin(rotate_angle/40.)
+            checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
+        
+        pushMatrix()
+        translate(920, 555)
+        rotate(rotate_angle/40.)
+        image(bone_horizontal, -200, -10, 400, 20)
+        popMatrix()
+        for r in range(-200, 200, 20):
+            hitbox_x = 920 + r * cos(rotate_angle/40.)
+            hitbox_y = 555 + r * sin(rotate_angle/40.)
+            checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
+        
+
+def Attack5():
+    textFont(speech, 25)
+    textAlign(LEFT, TOP)
+    
+    if millis() >= 86000 and millis() < 1000000:
+        if millis() >= 1000 and millis() < 6000:
+            image(bubble, Pos_xb, Pos_yb, 350, 192)
+            text("Huff. Puff. I'm getting dizzy.", 
+                    Pos_xb+125, Pos_yb+20, 200, 250)
+        if millis() >= 6000 and millis() < 11000:
+            image(bubble, Pos_xb, Pos_yb, 350, 192)
+            text("You're strong. Huff. Puff. ", 
+                    Pos_xb+125, Pos_yb+20, 200, 250)
+        if millis() >= 11000 and millis() < 16000:
+            image(bubble, Pos_xb, Pos_yb, 350, 192)
+            text("Die!", 
+                    Pos_xb+125, Pos_yb+20, 200, 250)
+            
+        
+        if millis() >= 11000 and millis() < 16000:
         
 def setup():
     global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal, wand, lightning
@@ -300,7 +332,7 @@ def draw():
         #Attack2()
         #Attack3()
         Attack4()
-        SpawnWand()
+        #SpawnWand()
         
     #########################    
     if height_healthbar >= 200:
@@ -325,7 +357,7 @@ def draw():
         y = y+5
     if LEFT in Keys:
         x = x-5
-    if RIGHT in Keys:
+    if RIGHT in Keys: 
         x = x+5
 
 
