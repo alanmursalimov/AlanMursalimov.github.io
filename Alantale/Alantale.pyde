@@ -1,12 +1,12 @@
 x = 575 #x-coordinate of the heart's starting position (will be changed by moving the heart)
 y = 525 #y-coordinate of the heart's starting position (will be changed by moving the heart) 
-Keys = []
-Pos_xb = 650 #x-position of the speech bubble
-Pos_yb = 0 #y-position of the speech bubble
+Keys = [] #list for determining in what direction the heart should move
+Pos_xb = 650 #X-position of the speech bubble
+Pos_yb = 0 #Y-position of the speech bubble
 
 height_healthbar = 0 #original height of the red rectangle which is used to display the player's health 
-w_heart = 32
-h_heart = 30
+w_heart = 32 #The width of the heart
+h_heart = 30 #The height of the heart
 def checkCollision(bx, by, bw, bh):
     """
     The function "checkCollision" was written by Gemini 3 Pro 
@@ -14,16 +14,7 @@ def checkCollision(bx, by, bw, bh):
     if they overlap, the red rectangle grows
     """
     global x, y, height_healthbar
-    ####################
-    noFill()
-    strokeWeight(1)
-    
-    stroke(0, 255, 0)
-    rect(x+13, y+10, w_heart, h_heart+5)
-    
-    stroke(255, 0, 0)
-    rect(bx, by, bw, bh)
-    ####################
+
     #calculates edges of the heart
     heart_left = x + 13
     heart_right = x + w_heart 
@@ -132,8 +123,8 @@ def Attack1():
             Ybones = Ybones + 40
     
             
-PosWave = -3000
-Vwave = 7
+PosWave = -3000 #Start X position of the picture (wave of bones)
+Vwave = 7 #The speed with which the picture moves
 def Attack2():
     """
     An image of bones of various sizes with a wavy hitbox 
@@ -171,11 +162,12 @@ def Attack2():
             checkCollision(i+PosWave+120, PosY, 10, 50)
             checkCollision(i+PosWave+120, PosY-150, 10, 50)
             
-        
-Ybone_horizontal = False
-Ybone_Pos = 0
-Xbone_Pos = 1000
-side = 0
+
+#Variable for determining if the next bone should spawn and fly into the desired direction
+Ybone_horizontal = False 
+Ybone_Pos = 0 #Y-start-coordinate of the bone
+Xbone_Pos = 1000 #X-Start-coordinate of the Bone
+side = 0 #variable for determining from which side the bone is flying from
 def Attack3():
     """
     Shoots horizontal bones from the sides at heart level to the left or right.
@@ -209,37 +201,43 @@ def Attack3():
     
     
     
-rotate_angle = 0
+rotate_angle = 0 #The angle of the bones to the X-Axis
 def Attack4():
+    """
+    Sans says poem and then 3 spinning bones appear which spin around it's own axis.
+    """
     global rotate_angle
     textFont(speech, 25)
     textAlign(LEFT, TOP)
     
-    if millis() >= 54000 and millis() < 59000:
+    if millis() >= 52000 and millis() < 57000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
             text("Roses are red, violets are blue", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
-    if millis() >= 59500 and millis() < 64500:
+    if millis() >= 57000 and millis() < 62000:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
         text("Everyone is  gone, and I am stuck here with you.", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
-    if millis() >= 65000 and millis() < 70000:
+    if millis() >= 62000 and millis() < 67000:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
         text("I am tired of waiting, so lets end this fast", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
-    if millis() >= 70500 and millis() < 75500:
+    if millis() >= 67000 and millis() < 72000:
         image(bubble, Pos_xb, Pos_yb, 350, 192)
         text("Cause you are the one leaving, and I am the one staying.", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
         
-    if millis() >= 76500 and millis() < 85000:
-        rotate_angle = rotate_angle + 1
+    if millis() >= 72000 and millis() < 90000:
+        rotate_angle = rotate_angle + 1 #increases the rotation angle by 1 per frame
         
-        pushMatrix()
-        translate(250, 555)
-        rotate(rotate_angle/40.)
+        #creates 3 different matrices where the bones may spin as well as the hitboxes
+        pushMatrix() #creates a new matrix
+        translate(250, 555)#puts the point 0,0 to these coordinates
+        rotate(rotate_angle/40.) #rotates the bones
         image(bone_horizontal, -200, -10, 400, 20)
-        popMatrix()
+        popMatrix()#returns everything back to normal
+        
+        #for loop for creating multiple small hitboxes which orbit the middle point of each bone
         for r in range(-200, 200, 20):
             hitbox_x = 250 + r * cos(rotate_angle/40.) #formula for orbiting a point on the X axis
             hitbox_y = 555 + r * sin(rotate_angle/40.) #formula for orbiting a point on the Y axis
@@ -265,38 +263,48 @@ def Attack4():
             hitbox_y = 555 + r * sin(rotate_angle/40.)
             checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
         
-End_pos_Y = 0
+End_pos_Y = 0 #Y coordinate of the bone which is used in the final Attack
 def Attack5():
+    """
+    Sans gets tired and launches one final bone from the top at the heart. 
+    The bone follows the heart on the X-axis. The player need to have enough
+    health to survive the attack.
+    """
     global End_pos_Y
     textFont(speech, 25)
     textAlign(LEFT, TOP)
     
-    if millis() >= 90000 and millis() < 1000000:
+    #sans' poem which he says in the speech bubbles
+    if millis() >= 92000 and millis() < 150000:
         image(sans_dizzy, 500, 38)
         if millis() >= 100000 and millis() < 105000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
             text("*Huff. Puff.* I'm getting dizzy.", 
                     Pos_xb+125, Pos_yb+20, 200, 250)
-        if millis() >= 105000 and millis() < 110000:
+        elif millis() >= 105000 and millis() < 110000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
             text("You're strong. *Huff. Puff.* ", 
                     Pos_xb+125, Pos_yb+20, 200, 250)
-        if millis() >= 115000 and millis() < 120000:
+        elif millis() >= 115000 and millis() < 120000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
             text("Die!", 
                     Pos_xb+125, Pos_yb+20, 200, 250)
-            
-            End_pos_Y = End_pos_Y + 10
+            #Sans launches a bone from the top at the heart
+            End_pos_Y = End_pos_Y + 10 #Y-Axis movement of the bone
             image(bone_vert, x, End_pos_Y, 20, 280)
             checkCollision(x, End_pos_Y, 20, 280)        
 
-            
-        if millis() >= 20000 and millis() < 25000: ##adjust times
+        #Shows the different stages of the dying sans
+        elif millis() >= 125000 and millis() < 127000: 
             image(sans_death2, 500, 38)
-        if millis() >= 20000 and millis() < 25000:
+        elif millis() >= 129000 and millis() < 131000:
             image(sans_death3, 500, 38)
-        if millis() >= 25000 and millis() < 30000:
+        elif millis() >= 133000 and millis() < 135000:
             image(sans_death4, 500, 38)
+        elif millis >= 135000:
+            background(0)
+            exit()
+            
         
 def setup():
     global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal, wand, lightning, sans_dizzy, sans_death2, sans_death3, sans_death4
@@ -342,23 +350,23 @@ def draw():
     
     image(heart, x, y) #image of the heart that moves
     if height_healthbar <= 200:
-        #Attack1()
-        #Attack2()
-        #Attack3()
-        #Attack4()
+        Attack1()
+        Attack2()
+        Attack3()
+        Attack4()
         Attack5()
         
     #########################    
     if height_healthbar >= 200:
         if death_point == 0:
             death_point = millis()
-        elif millis() - death_point > 1000:
-            background(0)
-            image(heart, x, y)
         elif millis() - death_point > 2000:
             background(0)
             image(loadImage("broken_heart.png"),x, y)
             exit()
+        elif millis() - death_point > 2000:
+            background(0)
+            image(heart, x, y)
        ################################not finished yet!!!
 
     height_healthbar = constrain(height_healthbar, 0, 200) #limits the rectangle size that reduces HP
