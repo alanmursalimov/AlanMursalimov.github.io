@@ -1,17 +1,28 @@
+"""
+==================================================================
+ Filename: Alantale.pyde
+ Description: Undertale-inspired boss fight game. The player controls
+ a heart with the arrow keys and must dodge Sans's attcaks with bones.
+ Copyright: GPL
+ Created: 24.03.2026
+ Author: Alan Mursalimov & Nevin Rohner
+==================================================================
+"""
 x = 575 #x-coordinate of the heart's starting position (will be changed by moving the heart)
 y = 525 #y-coordinate of the heart's starting position (will be changed by moving the heart) 
 Keys = [] #list for determining in what direction the heart should move
 Pos_xb = 650 #X-position of the speech bubble
 Pos_yb = 0 #Y-position of the speech bubble
+violett =  color(127, 0, 255) #assigns the color purple to the variable "violet"
 
-height_healthbar = 0 #original height of the red rectangle which is used to display the player's health 
+height_healthbar = 0 #tracks the current damage dealt; grows as the player takes hits
 w_heart = 32 #The width of the heart
 h_heart = 30 #The height of the heart
 def checkCollision(bx, by, bw, bh):
     """
     The function "checkCollision" was written by Gemini 3 Pro 
-    It calculates the corners of the heart and bones. After thet it checks for overlapping values every frame. 
-    if they overlap, the red rectangle grows
+    It calculates the corners of the heart and bones. After that, it checks for overlapping values every frame.
+    If they overlap, the health bar grows to indicate damage.
     """
     global x, y, height_healthbar
 
@@ -39,11 +50,11 @@ def checkCollision(bx, by, bw, bh):
 
 
 
-#procedure for creating the text in the boxes
+
 def Button(x, y, w, h, tx):
     """
-    subfuction for creating the decorative boxes, where values are used for the
-    variables in the "Fightinetrface()" subfunction.
+    subfunction for creating the decorative boxes; values are passed in from
+    the "FightInterface()" function.
     """ 
     stroke(violett) #colors the buttons purple
     strokeWeight(4)
@@ -55,11 +66,10 @@ def Button(x, y, w, h, tx):
     textFont(ButtonFont, 60)
     text(tx, x+w/2, y+h/2) #calculates the middle of the boxes for the text
 
-#Draws the "Start Screen" by adding the combat box, buttons, and health bar. 
 def FightInterface():
     """
-    Draw the fighting box in which the heart moves and the decorative 
-    buttons.
+    Draws the fight UI each frame: Sans's image, the health bar, and the four action buttons.
+    The battle box itself is drawn in draw().
     """
     image(sans, 500, 38) #image of Sans 
     
@@ -71,10 +81,10 @@ def FightInterface():
     noStroke()
     rect(1132, 452, 27, height_healthbar) #rectangle to show healthloss
 
-    Button(100, 730, 220, 80, "Fight") #"Fight"-Button
-    Button(360, 730, 220, 80, "Act") #"Act"-Button
-    Button(620, 730, 220, 80, "Items") #Items"-Button
-    Button(880, 730, 220, 80, "Mercy") #"Mercy"-Button
+    Button(100, 730, 220, 80, "Fight") # "Fight" button
+    Button(360, 730, 220, 80, "Act") # "Act" button
+    Button(620, 730, 220, 80, "Items") # "Items" button
+    Button(880, 730, 220, 80, "Mercy") # "Mercy" button
     
     
     
@@ -85,8 +95,8 @@ Vbones = 5 #bonespeed
 Ybones = 400 #y coordinate of the bones
 def Attack1():
     """
-    2 bones on each side move in the opposite direction. In doing so, 
-    you must move the heart either all the way up or all the way down to avoid damage
+    2 bones on each side move in the opposite direction. To avoid damage the player needs
+    to move all the way up or down.
     """
     global Xbone1, Xbone2, Pos_xb, Pos_yb, Vbones, Ybones
     textFont(speech, 25)
@@ -163,10 +173,9 @@ def Attack2():
             checkCollision(i+PosWave+120, PosY-150, 10, 50)
             
 
-#Variable for determining if the next bone should spawn and fly into the desired direction
-Ybone_horizontal = False 
+Ybone_horizontal = False #True while a bone is in flight; resets to False when the bone leaves the screen
 Ybone_Pos = 0 #Y-start-coordinate of the bone
-Xbone_Pos = 1000 #X-Start-coordinate of the Bone
+Xbone_Pos = 1000 #x-coordinate of the bone (resets each time a new bone spawns)
 side = 0 #variable for determining from which side the bone is flying from
 def Attack3():
     """
@@ -201,15 +210,16 @@ def Attack3():
     
     
     
-rotate_angle = 0 #The angle of the bones to the X-Axis
+rotate_angle = 0 #current rotation angle; incremented each frame to spin the bones
 def Attack4():
     """
-    Sans says poem and then 3 spinning bones appear which spin around it's own axis.
+    Sans recites a poem, then 3 bones appear and spin around their own center.
     """
     global rotate_angle
     textFont(speech, 25)
     textAlign(LEFT, TOP)
     
+    #Sans' poem
     if millis() >= 52000 and millis() < 57000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
             text("Roses are red, violets are blue", 
@@ -227,55 +237,37 @@ def Attack4():
         text("Cause you are the one leaving, and I am the one staying.", 
                  Pos_xb+125, Pos_yb+20, 200, 250)
         
+    #The attack with the 3 bones
     if millis() >= 72000 and millis() < 90000:
         rotate_angle = rotate_angle + 1 #increases the rotation angle by 1 per frame
+
+        for i in 250, 605, 920: #goes though each bone one by one
+            pushMatrix() #saves the current coordinate system
+            translate(i, 555) #moves the origin to the center of the bone
+            rotate(rotate_angle/40.) #rotates the bones around their center
+            image(bone_horizontal, -200, -10, 400, 20)
+            popMatrix() #resets the coordinate system back to normal
+
+            #loop for creating multiple small hitboxes which orbit the middle point of each bone
+            for r in range(-200, 200, 20):
+                hitbox_x = i + r * cos(rotate_angle/40.) #formula for orbiting a point on the X axis
+                hitbox_y = 555 + r * sin(rotate_angle/40.) #formula for orbiting a point on the Y axis
+                checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
+                
         
-        #creates 3 different matrices where the bones may spin as well as the hitboxes
-        pushMatrix() #creates a new matrix
-        translate(250, 555)#puts the point 0,0 to these coordinates
-        rotate(rotate_angle/40.) #rotates the bones
-        image(bone_horizontal, -200, -10, 400, 20)
-        popMatrix()#returns everything back to normal
-        
-        #for loop for creating multiple small hitboxes which orbit the middle point of each bone
-        for r in range(-200, 200, 20):
-            hitbox_x = 250 + r * cos(rotate_angle/40.) #formula for orbiting a point on the X axis
-            hitbox_y = 555 + r * sin(rotate_angle/40.) #formula for orbiting a point on the Y axis
-            checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
-        
-        pushMatrix()
-        translate(605, 555)
-        rotate(rotate_angle/40.)
-        image(bone_horizontal, -200, -10, 400, 20)
-        popMatrix()
-        for r in range(-200, 200, 20):
-            hitbox_x = 605 + r * cos(rotate_angle/40.)
-            hitbox_y = 555 + r * sin(rotate_angle/40.)
-            checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
-        
-        pushMatrix()
-        translate(920, 555)
-        rotate(rotate_angle/40.)
-        image(bone_horizontal, -200, -10, 400, 20)
-        popMatrix()
-        for r in range(-200, 200, 20):
-            hitbox_x = 920 + r * cos(rotate_angle/40.)
-            hitbox_y = 555 + r * sin(rotate_angle/40.)
-            checkCollision(hitbox_x - 10, hitbox_y - 10, 20, 20)
-        
-End_pos_Y = 0 #Y coordinate of the bone which is used in the final Attack
+End_pos_Y = 0 #y-coordinate of the bone used in the final attack; increases each frame to move it downward
 def Attack5():
     """
-    Sans gets tired and launches one final bone from the top at the heart. 
-    The bone follows the heart on the X-axis. The player need to have enough
+    Sans gets tired and launches one final bone from the top at the heart.
+    The bone follows the heart on the x-axis. The player needs to have enough
     health to survive the attack.
     """
     global End_pos_Y
     textFont(speech, 25)
     textAlign(LEFT, TOP)
     
-    #sans' poem which he says in the speech bubbles
-    if millis() >= 92000 and millis() < 150000:
+    #Sans's dialogue lines, displayed in speech bubbles
+    if millis() >= 90000 and millis() < 150000:
         image(sans_dizzy, 500, 38)
         if millis() >= 100000 and millis() < 105000:
             image(bubble, Pos_xb, Pos_yb, 350, 192)
@@ -297,21 +289,20 @@ def Attack5():
         #Shows the different stages of the dying sans
         elif millis() >= 125000 and millis() < 127000: 
             image(sans_death2, 500, 38)
-        elif millis() >= 129000 and millis() < 131000:
+        elif millis() >= 127000 and millis() < 129000:
             image(sans_death3, 500, 38)
-        elif millis() >= 133000 and millis() < 135000:
+        elif millis() >= 129000 and millis() < 131000:
             image(sans_death4, 500, 38)
-        elif millis >= 135000:
+        elif millis() >= 131000:
             background(0)
             exit()
             
         
 def setup():
-    global ButtonFont, violett, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal, wand, lightning, sans_dizzy, sans_death2, sans_death3, sans_death4
+    global ButtonFont, sans, heart, bone_vert, bubble, backGround, sans_closed, speech, bone_wave, sans_purple, sans_clock, bone_horizontal, sans_dizzy, sans_death2, sans_death3, sans_death4
     size(1200, 850)
-    pixelDensity(1) #This function is used for rendering images. It also ensures smooth gameplay.
+    pixelDensity(1) #forces standard resolution to prevent blurry images on HiDPI (Retina) screens
     
-    violett =  color(127, 0, 255) #assigns the color purple to the variable "violet"
     ButtonFont=loadFont("ButtonsFont.vlw") #font for the text
     speech = loadFont("speech.vlw") #font for the speech bubble
     
@@ -319,25 +310,24 @@ def setup():
     bone_horizontal = loadImage("bone_horizontal.png") #horizontal bone
     bone_wave = loadImage("bone_wave.png") #bone wave
     
+    #all Sans images were based on "Undertale Sans Sprite V5" by "AverageEnthusiastArt", edited by Nevin Rohner
     sans = loadImage("sans.png") #normal sans
     sans_clock = loadImage("sans_clock.png") #sans with a watch as an eye
-    sans_dizzy = loadImage("sans_dizzy.png")
-    sans_death2 = loadImage("sans_death2.png")
-    sans_death3 = loadImage("sans_death3.png")
-    sans_death4 = loadImage("sans_death4.png")
+    sans_dizzy = loadImage("sans_dizzy.png") #Sans death animation, frame 1
+    sans_death2 = loadImage("sans_death2.png") #Sans death animation, frame 2
+    sans_death3 = loadImage("sans_death3.png") #Sans death animation, frame 3
+    sans_death4 = loadImage("sans_death4.png") #Sans death animation, frame 4
     sans_closed = loadImage("sans_eyes_closed.png") #sans with his eyes closed
     sans_purple = loadImage("sans_purple_eyes.png") #sans purple eyes
     
+    #the background
     backGround = loadImage("galaxy.png") #image of the background
     heart = loadImage("heart.png") #image of the heart
     bubble = loadImage("bubble.png") #image of the speech bubble
-    wand = loadImage("wand.png")
-    lightning = loadImage("lightning.png")
-    
     
 
 
-death_point = 0
+death_point = 0 #stores the time when the player died; 0 means the player is still alive
 def draw():
     global y, x, height_healthbar, death_point
     image(backGround, 0, 0) #galaxy background
@@ -349,38 +339,41 @@ def draw():
     rect(100, 400, 1000, 300) #battle box in which the heart moves
     
     image(heart, x, y) #image of the heart that moves
+    #While the red healthbar rectangle is smaller than 200 the Attacks may be drawn
     if height_healthbar <= 200:
         Attack1()
         Attack2()
         Attack3()
         Attack4()
         Attack5()
-        
-    #########################    
-    if height_healthbar >= 200:
+
+    #If the red healthbar rectangle is bigger than 200 then it should show the endscreen
+    if height_healthbar >= 200: 
+        #set the death_point variable to millis so we can subtract it
         if death_point == 0:
             death_point = millis()
-        elif millis() - death_point > 2000:
-            background(0)
+        background(0)
+        #if less than 1.5 seconds have passed since death, draw the regular heart (frozen in place)
+        if millis() - death_point < 1500:
+            image(heart, x, y)
+        #after 1.5 seconds, switch to the broken heart and exit
+        elif millis() - death_point < 2000:
             image(loadImage("broken_heart.png"),x, y)
             exit()
-        elif millis() - death_point > 2000:
-            background(0)
-            image(heart, x, y)
-       ################################not finished yet!!!
 
     height_healthbar = constrain(height_healthbar, 0, 200) #limits the rectangle size that reduces HP
     x = constrain(x, 97, 1043) #limits the heart's movement to the battle box in x direction
     y = constrain(y, 397, 643) #limits the heart's movement to the battle box in y direction
     #Movement with arrow keys
-    if UP in Keys: 
-        y = y-5
-    if DOWN in Keys:
-        y = y+5
-    if LEFT in Keys:
-        x = x-5
-    if RIGHT in Keys: 
-        x = x+5
+    if height_healthbar < 200:
+        if UP in Keys: 
+            y = y-5
+        if DOWN in Keys:
+            y = y+5
+        if LEFT in Keys:
+            x = x-5
+        if RIGHT in Keys: 
+            x = x+5
 
 
 #When an arrow key is pressed, its value (e.g. "UP") is stored in the "Keys" list
@@ -388,8 +381,7 @@ def keyPressed():
     if key == CODED:
         Keys.append(keyCode)
 
-#When an arrow key is released, its value is removed from the list.
-#This runs constantly so that a maximum of 2 values can be in the list at a time.
+#When an arrow key is released, its value is removed from the list, stopping movement in that direction.
 def keyReleased():
     if key == CODED:
         while keyCode in Keys:
