@@ -294,7 +294,7 @@ def Attack5():
         elif millis() >= 129000 and millis() < 131000:
             image(sans_death4, 500, 38)
         elif millis() >= 131000:
-            background(0)
+            image(loadImage("end_screen.png"), 0, 0)
             exit()
             
         
@@ -359,6 +359,8 @@ def draw():
         #after 1.5 seconds, switch to the broken heart and exit
         elif millis() - death_point < 2000:
             image(loadImage("broken_heart.png"),x, y)
+        elif millis() -death_point < 3000:
+            image(loadImage("game_over.png"), 0, 0)
             exit()
 
     height_healthbar = constrain(height_healthbar, 0, 200) #limits the rectangle size that reduces HP
